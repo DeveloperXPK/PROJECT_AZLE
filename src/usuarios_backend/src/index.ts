@@ -1,6 +1,7 @@
 import {
     Canister,
     Err,
+    int,
     Ok,
     Opt,
     Principal,
@@ -17,9 +18,8 @@ import {
 const User = Record({
     id: Principal,
     nombre: text,
-    primerApellido: text,
-    segundoApellido: text,
-    alias: text
+    direccion: text,
+    telefono: text
 });
 type User = typeof User.tsType;
 
@@ -31,15 +31,15 @@ type AplicationError = typeof AplicationError.tsType;
 
 let users = StableBTreeMap<Principal, User>(0);
 
+
 export default Canister({
-    createUser: update([text, text, text, text], User, (nombre, primerApellido, segundoApellido, alias) => {
+    createUser: update([text, text, text], User, (nombre, direccion, telefono) => {
         const id = generateId();
         const user: User = {
             id:id,
             nombre: nombre,
-            primerApellido: primerApellido,
-            segundoApellido: segundoApellido,
-            alias: alias
+            direccion: direccion,
+            telefono: telefono
         };
 
         users.insert(user.id, user);
@@ -67,9 +67,9 @@ export default Canister({
         return Ok(user);
     }),
     updateUser: update(
-        [text, text, text, text, text],
+        [text, text, text, text],
         Result(User, AplicationError),
-        (userId, nombre, primerApellido, segundoApellido, alias) => {
+        (userId, nombre, direccion, telefono) => {
             const userOpt = users.get(Principal.fromText(userId));
 
             if ('None' in userOpt) {
@@ -80,9 +80,8 @@ export default Canister({
             const newUser: User = {
                 id:Principal.fromText(userId),
                 nombre: nombre,
-                primerApellido: primerApellido,
-                segundoApellido: segundoApellido,
-                alias: alias
+                direccion: direccion,
+                telefono: telefono
             };
 
             users.remove(Principal.fromText(userId))
@@ -91,6 +90,8 @@ export default Canister({
             return Ok(newUser);
         }
     )
+
+    
 })
 
 function generateId(): Principal {

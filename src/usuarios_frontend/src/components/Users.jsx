@@ -12,7 +12,7 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState("");
   const [idUser, setIdUser] = useState("");
-  const [alias, setAlias] = useState("");
+  const [nombre, setNombre] = useState("");
 
   const [showModalEditar, setShowModalEditar] = useState(false);
   const [showModalEliminar, setShowModalEliminar] = useState(false);
@@ -22,13 +22,12 @@ const Users = () => {
     const form = document.getElementById("formEditar")
     
     const nombre = form.nombre.value;
-    const primerApellido = form.primerApellido.value;
-    const segundoApellido = form.segundoApellido.value;
-    const alias = form.alias.value;
+    const direccion = form.direccion.value;
+    const telefono = form.telefono.value;
 
     setLoading("Loading...");
 
-    await usersBackend.updateUser(idUser, nombre, primerApellido, segundoApellido, alias);
+    await usersBackend.updateUser(idUser, nombre, direccion, telefono);
     setLoading("");
     setIdUser("")
 
@@ -46,15 +45,14 @@ const Users = () => {
 
     const form = document.getElementById("formEditar")
     form.nombre.value = usuario[0].nombre
-    form.primerApellido.value = usuario[0].primerApellido
-    form.segundoApellido.value = usuario[0].segundoApellido
-    form.alias.value = usuario[0].alias
+    form.direccion.value = usuario[0].direccion
+    form.telefono.value = usuario[0].telefono
 
   }
 
-  const handleShowModalEliminar = async (idUsuario, alias) => {
+  const handleShowModalEliminar = async (idUsuario, nombre) => {
     setShowModalEliminar(true);
-    setAlias(alias)
+    setNombre(nombre)
     setIdUser(idUsuario)
       
 
@@ -122,9 +120,8 @@ const Users = () => {
                 <thead>
                   <tr>
                     <th>Nombre</th>
-                    <th>Primer apellido</th>
-                    <th>Segundo apellido</th>
-                    <th>Alias</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
                     <th colSpan="2">Opciones</th>
                   </tr>
                 </thead>
@@ -133,14 +130,13 @@ const Users = () => {
                     return (
                       <tr key={user.id}>
                         <td>{user.nombre}</td>
-                        <td>{user.primerApellido}</td>
-                        <td>{user.segundoApellido}</td>
-                        <td>{user.alias}</td>
+                        <td>{user.direccion}</td>
+                        <td>{user.telefono}</td>
                         <td>
                           <button type="button" className="btn btn-primary" onClick={() => handleShowModalEditar(`${user.id}`)}>Editar</button>
                         </td>
                         <td>
-                          <button type="button" className="btn btn-danger" onClick={() => handleShowModalEliminar(`${user.id}`,user.alias)}>Eliminar</button>
+                          <button type="button" className="btn btn-danger" onClick={() => handleShowModalEliminar(`${user.id}`,user.nombre)}>Eliminar</button>
                         </td>
                       </tr>
                     );
@@ -167,19 +163,15 @@ const Users = () => {
                 <form style={{display:"inline"}} id="formEditar" >
                   <div className="form-group">
                       <label htmlFor="nombre" >Nombre usuario</label>
-                      <input type="text" className="form-control" id="nombre" placeholder="Juan" />
+                      <input type="text" className="form-control" id="nombre" placeholder="Homer" />
                   </div>
                   <div className="form-group">
-                      <label htmlFor="primerApellido" >Primer apellido</label>
-                      <input type="text" className="form-control" id="primerApellido" placeholder="Pérez" />
+                      <label htmlFor="direccion" >Direccion</label>
+                      <input type="text" className="form-control" id="direccion" placeholder="Calle siempre viva" />
                   </div>
                       <div className="form-group">
-                      <label htmlFor="segundoApellido" >Segundo apellido</label>
-                      <input type="text" className="form-control" id="segundoApellido" placeholder="López" />
-                  </div>
-                  <div className="form-group">
-                      <label htmlFor="alias" >Alias</label>
-                      <input type="text" className="form-control" id="alias" placeholder="juanito" />
+                      <label htmlFor="telefono" >Telefono</label>
+                      <input type="text" className="form-control" id="telefono" placeholder="123" />
                   </div>
                   <br />
                 </form>
@@ -209,7 +201,7 @@ const Users = () => {
                   :
                   <div></div>
                 }
-                <p> Deseas eliminar el usuario con alias {alias}</p>
+                <p> Deseas eliminar el usuario con nombre {nombre}</p>
               </div>
             </div>
           </Modal.Body>

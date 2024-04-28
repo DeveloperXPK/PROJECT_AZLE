@@ -11,13 +11,12 @@ const UserCreate = () => {
         e.preventDefault();
         const form = e.target
         const nombre = form.nombre.value;
-        const primerApellido = form.primerApellido.value;
-        const segundoApellido = form.segundoApellido.value;
-        const alias = form.alias.value;
+        const direccion = form.direccion.value;
+        const telefono = form.telefono.value;
 
         setLoading("Loading...");
 
-        await usuarios_backend.createUser(nombre, primerApellido, segundoApellido, alias);
+        await usuarios_backend.createUser(nombre, direccion, telefono);
         setLoading("");
 
         {
@@ -47,24 +46,19 @@ const UserCreate = () => {
                         <form onSubmit={saveUser} style={{display:"inline"}} >
                         <div className="form-group">
                             <label htmlFor="nombre" >Nombre usuario</label>
-                            <input type="text" className="form-control" id="nombre" placeholder="Juan" />
+                            <input type="text" className="form-control" id="nombre" placeholder="Homer" />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="primerApellido" >Primer apellido</label>
-                            <input type="text" className="form-control" id="primerApellido" placeholder="Pérez" />
+                            <label htmlFor="direccion" >Direccion</label>
+                            <input type="text" className="form-control" id="direccion" placeholder="calle siempre viva" />
                         </div>
                             <div className="form-group">
-                            <label htmlFor="segundoApellido" >Segundo apellido</label>
-                            <input type="text" className="form-control" id="segundoApellido" placeholder="López" />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="alias" >Alias</label>
-                            <input type="text" className="form-control" id="alias" placeholder="juanito" />
+                            <label htmlFor="telefono" >Telefono</label>
+                            <input type="text" className="form-control" id="telefono" placeholder="123" />
                         </div>
                         <br />
                         <div className="form-group">
                             <input type="submit" className="btn btn-success" value="Agregar"/>  
-
                         </div>
                         </form>
                     </div>
