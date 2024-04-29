@@ -7,6 +7,7 @@ import {BrowserRouter, Route, Link, Routes} from 'react-router-dom';
 import Home from "./Home";
 import Users from "./Users";
 import UserCreate from "./UserCreate";
+import CreateProduct from "./CreateProduct";
 import * as usuarios_backend from "declarations/usuarios_backend";
 
 // import Programas from "./Programas";
@@ -74,6 +75,8 @@ const Menu = () => {
                 
                     <Link to='/' className="navbar-brand">Sistema</Link>
                     <Link to='/nuevo-usuario'className="navbar-brand" >Nuevo</Link>
+                    <Link to='/nuevo-Producto'className="navbar-brand" >Productos</Link>
+                    <Link to='/lista-Productos'className="navbar-brand" id="btnProductList">Lista Productos</Link>
                     <Link to='/usuarios'className="navbar-brand" id="btnUserList">Usuarios</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -117,7 +120,9 @@ const Menu = () => {
     <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/usuarios" element={<Users />} />
-        <Route path="/nuevo-usuario" element={<UserCreate />} />
+        <Route path="/nuevo-usuario" element={<UserCreate />} />\
+        <Route path="/nuevo-Producto" element={<CreateProduct />} />\
+        
     </Routes>
 
     </BrowserRouter>

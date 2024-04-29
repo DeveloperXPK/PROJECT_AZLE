@@ -2,6 +2,7 @@ import {
     Canister,
     Err,
     int,
+    int32,
     Ok,
     Opt,
     Principal,
@@ -23,16 +24,27 @@ const User = Record({
 });
 type User = typeof User.tsType;
 
+const Product = Record({
+    id_Producto:Principal,
+    nombre_Producto:text,
+    fabricante_Producto:text,
+    precio_Producto:text
+})
+
+type Product = typeof Product.tsType;
+
 const AplicationError = Variant({
-    UserDoesNotExist: text
+    UserDoesNotExist: text,
+    productDoesNotExist: text
 });
 
 type AplicationError = typeof AplicationError.tsType;
 
 let users = StableBTreeMap<Principal, User>(0);
-
+let products = StableBTreeMap<Principal,Product>(1);
 
 export default Canister({
+    
     createUser: update([text, text, text], User, (nombre, direccion, telefono) => {
         const id = generateId();
         const user: User = {
@@ -88,6 +100,66 @@ export default Canister({
             users.insert(Principal.fromText(userId), newUser);
 
             return Ok(newUser);
+        }
+    ),
+
+    createProduct: update([text, text, text], Product, (nombre_Producto, fabricante_Producto, precio_Producto) => {
+        const id_Producto = generateId();
+        const product: Product = {
+            id_Producto: id_Producto,
+            nombre_Producto: nombre_Producto,
+            fabricante_Producto: fabricante_Producto,
+            precio_Producto: precio_Producto
+        };
+
+        products.insert(product.id_Producto,product)
+
+        return product;
+    }),
+
+    readProducts: query([], Vec(Product), () => {
+        return products.values();
+    }),
+    readProductById: query([text], Opt(Product), (id_Producto) => {
+        return products.get(Principal.fromText(id_Producto));
+    }),
+
+    deleteProduct: update([text], Result(Product, AplicationError), (id_Producto) => {
+        const productOpt = products.get(Principal.fromText(id_Producto));
+
+        if ('None' in productOpt) {
+            return Err({
+                UserDoesNotExist: id_Producto
+            });
+        }
+
+        const product = productOpt.Some;
+        products.remove(product.id_Producto);
+        return Ok(product);
+    }),
+
+    updateProduct: update(
+        [text, text, text, text],
+        Result(Product, AplicationError),
+        (productId, nombre_Producto, fabricante_Producto, precio_Producto) => {
+            const productOpt = products.get(Principal.fromText(productId));
+
+            if ('None' in productOpt) {
+                return Err({
+                    productDoesNotExist: productId
+                });
+            }
+            const newProduct: Product = {
+                id_Producto:Principal.fromText(productId),
+                nombre_Producto: nombre_Producto,
+                fabricante_Producto: fabricante_Producto,
+                precio_Producto: precio_Producto
+            };
+
+            products.remove(Principal.fromText(productId))
+            products.insert(Principal.fromText(productId), newProduct);
+
+            return Ok(newProduct);
         }
     )
 

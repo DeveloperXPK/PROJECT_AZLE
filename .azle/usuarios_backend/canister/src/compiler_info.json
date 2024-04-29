@@ -1,1 +1,1 @@
-{"canister_methods":{"queries":[{"name":"readUsers","composite":false},{"name":"readUserById","composite":false}],"updates":[{"name":"createUser"},{"name":"deleteUser"},{"name":"updateUser"}],"callbacks":{}}}
+{"canister_methods":{"queries":[{"name":"readUsers","composite":false},{"name":"readUserById","composite":false},{"name":"readProducts","composite":false},{"name":"readProductById","composite":false}],"updates":[{"name":"createUser"},{"name":"deleteUser"},{"name":"updateUser"},{"name":"createProduct"},{"name":"deleteProduct"},{"name":"updateProduct"}],"callbacks":{}}}

@@ -91,11 +91,11 @@ const Users = () => {
 
     await usersBackend.deleteUser(idUser);
     setLoading("");
-    setIdUser("")
-    setAlias("")
+    setIdUser("");
+    setNombre("");
     setShowModalEliminar(false);
     
-    obtieneUsuarios()
+    obtieneUsuarios();
   }
   
  
@@ -116,7 +116,7 @@ const Users = () => {
               Lista de usuarios
             </div>
             <div className="card-body">
-              <table className="table">
+                <table className="table">
                 <thead>
                   <tr>
                     <th>Nombre</th>
@@ -163,7 +163,7 @@ const Users = () => {
                 <form style={{display:"inline"}} id="formEditar" >
                   <div className="form-group">
                       <label htmlFor="nombre" >Nombre usuario</label>
-                      <input type="text" className="form-control" id="nombre" placeholder="Homer" />
+                      <input type="text" className="form-control" id="nombre" placeholder="Homero" />
                   </div>
                   <div className="form-group">
                       <label htmlFor="direccion" >Direccion</label>

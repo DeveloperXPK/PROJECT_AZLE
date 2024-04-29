@@ -1,7 +1,12 @@
 service: () -> {
+    createProduct: (text, text, text) -> (record {fabricante_Producto:text; nombre_Producto:text; id_Producto:principal; precio_Producto:text});
     createUser: (text, text, text) -> (record {id:principal; direccion:text; nombre:text; telefono:text});
-    deleteUser: (text) -> (variant {Ok:record {id:principal; direccion:text; nombre:text; telefono:text}; Err:variant {UserDoesNotExist:text}});
+    deleteProduct: (text) -> (variant {Ok:record {fabricante_Producto:text; nombre_Producto:text; id_Producto:principal; precio_Producto:text}; Err:variant {UserDoesNotExist:text; productDoesNotExist:text}});
+    deleteUser: (text) -> (variant {Ok:record {id:principal; direccion:text; nombre:text; telefono:text}; Err:variant {UserDoesNotExist:text; productDoesNotExist:text}});
+    readProductById: (text) -> (opt record {fabricante_Producto:text; nombre_Producto:text; id_Producto:principal; precio_Producto:text}) query;
+    readProducts: () -> (vec record {fabricante_Producto:text; nombre_Producto:text; id_Producto:principal; precio_Producto:text}) query;
     readUserById: (text) -> (opt record {id:principal; direccion:text; nombre:text; telefono:text}) query;
     readUsers: () -> (vec record {id:principal; direccion:text; nombre:text; telefono:text}) query;
-    updateUser: (text, text, text, text) -> (variant {Ok:record {id:principal; direccion:text; nombre:text; telefono:text}; Err:variant {UserDoesNotExist:text}});
+    updateProduct: (text, text, text, text) -> (variant {Ok:record {fabricante_Producto:text; nombre_Producto:text; id_Producto:principal; precio_Producto:text}; Err:variant {UserDoesNotExist:text; productDoesNotExist:text}});
+    updateUser: (text, text, text, text) -> (variant {Ok:record {id:principal; direccion:text; nombre:text; telefono:text}; Err:variant {UserDoesNotExist:text; productDoesNotExist:text}});
 }

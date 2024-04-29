@@ -30,7 +30,7 @@ function _extends() {
     };
     return _extends.apply(this, arguments);
 }
-var _class, _class1, _class2, _class3, _class4, _class5, _class6, _class7, _class8;
+var _class, _class1, _class2, _class3, _class4, _class5, _class6, _class7;
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -98958,24 +98958,8 @@ var AzleVec = (_class2 = class {
 function Vec2(t) {
     return new AzleVec(t);
 }
-// node_modules/azle/src/lib/candid/types/primitive/ints/int.ts
-var AzleInt = (_class3 = class {
-    static toBytes(data) {
-        return encode3(this, data);
-    }
-    static fromBytes(bytes2) {
-        return decode3(this, bytes2);
-    }
-    static getIdl() {
-        return idl_exports.Int;
-    }
-    constructor(){
-        this._azleKind = "AzleInt";
-    }
-}, _class3._azleKind = "AzleInt", _class3);
-var int = AzleInt;
 // node_modules/azle/src/lib/candid/types/primitive/nats/nat.ts
-var AzleNat = (_class4 = class {
+var AzleNat = (_class3 = class {
     static toBytes(data) {
         return encode3(this, data);
     }
@@ -98988,10 +98972,10 @@ var AzleNat = (_class4 = class {
     constructor(){
         this._azleKind = "AzleNat";
     }
-}, _class4._azleKind = "AzleNat", _class4);
+}, _class3._azleKind = "AzleNat", _class3);
 var nat = AzleNat;
 // node_modules/azle/src/lib/candid/types/primitive/null.ts
-var AzleNull = (_class5 = class {
+var AzleNull = (_class4 = class {
     static toBytes(data) {
         return encode3(this, data);
     }
@@ -99004,10 +98988,10 @@ var AzleNull = (_class5 = class {
     constructor(){
         this._azleKind = "AzleNull";
     }
-}, _class5._azleKind = "AzleNull", _class5);
+}, _class4._azleKind = "AzleNull", _class4);
 var Null2 = AzleNull;
 // node_modules/azle/src/lib/candid/types/primitive/text.ts
-var AzleText = (_class6 = class {
+var AzleText = (_class5 = class {
     static toBytes(data) {
         return encode3(this, data);
     }
@@ -99020,7 +99004,7 @@ var AzleText = (_class6 = class {
     constructor(){
         this._azleKind = "AzleText";
     }
-}, _class6._azleKind = "AzleText", _class6);
+}, _class5._azleKind = "AzleText", _class5);
 var text = AzleText;
 // node_modules/azle/src/lib/candid/types/reference/service/canister_function/query_update.ts
 function createQueryMethods(canisterOptions) {
@@ -99176,7 +99160,7 @@ function Canister(canisterOptions) {
     return result;
 }
 // node_modules/azle/src/lib/candid/types/reference/principal.ts
-var Principal3 = (_class7 = class extends Principal {
+var Principal3 = (_class6 = class extends Principal {
     static toBytes(data) {
         return encode3(this, data);
     }
@@ -99186,7 +99170,7 @@ var Principal3 = (_class7 = class extends Principal {
     static getIdl(_parents) {
         return idl_exports.Principal;
     }
-}, _class7._azleKind = "Principal", _class7);
+}, _class6._azleKind = "Principal", _class6);
 // node_modules/azle/src/lib/candid/serde/decode.ts
 function decode3(candidType, data) {
     if (Array.isArray(candidType)) {
@@ -99414,7 +99398,7 @@ function encodeMultiple(candidTypes, data) {
     return new Uint8Array(idl_exports.encode(idls, values));
 }
 // node_modules/azle/src/lib/candid/types/primitive/nats/nat64.ts
-var AzleNat64 = (_class8 = class {
+var AzleNat64 = (_class7 = class {
     static toBytes(data) {
         return encode3(this, data);
     }
@@ -99427,7 +99411,7 @@ var AzleNat64 = (_class8 = class {
     constructor(){
         this._azleKind = "AzleNat64";
     }
-}, _class8._azleKind = "AzleNat64", _class8);
+}, _class7._azleKind = "AzleNat64", _class7);
 var nat64 = AzleNat64;
 // node_modules/azle/src/lib/ic/call_raw.ts
 function callRaw(canisterId, method2, argsRaw, payment) {
@@ -100751,15 +100735,18 @@ var User = Record2({
     direccion: text,
     telefono: text
 });
+var Product = Record2({
+    id_Producto: Principal3,
+    nombre_Producto: text,
+    fabricante_Producto: text,
+    precio_Producto: text
+});
 var AplicationError = Variant2({
-    UserDoesNotExist: text
+    UserDoesNotExist: text,
+    productDoesNotExist: text
 });
 var users = StableBTreeMap(0);
-var Product = Record2({
-    id_Product: Principal3,
-    name_Product: text,
-    price_Product: int
-});
+var products = StableBTreeMap(1);
 var src_default = Canister({
     createUser: update([
         text,
@@ -100818,6 +100805,64 @@ var src_default = Canister({
         users.remove(Principal3.fromText(userId));
         users.insert(Principal3.fromText(userId), newUser);
         return Ok(newUser);
+    }),
+    createProduct: update([
+        text,
+        text,
+        text
+    ], Product, (nombre_Producto, fabricante_Producto, precio_Producto)=>{
+        const id_Producto = generateId();
+        const product = {
+            id_Producto,
+            nombre_Producto,
+            fabricante_Producto,
+            precio_Producto
+        };
+        products.insert(product.id_Producto, product);
+        return product;
+    }),
+    readProducts: query([], Vec2(Product), ()=>{
+        return products.values();
+    }),
+    readProductById: query([
+        text
+    ], Opt2(Product), (id_Producto)=>{
+        return products.get(Principal3.fromText(id_Producto));
+    }),
+    deleteProduct: update([
+        text
+    ], Result(Product, AplicationError), (id_Producto)=>{
+        const productOpt = products.get(Principal3.fromText(id_Producto));
+        if ("None" in productOpt) {
+            return Err({
+                UserDoesNotExist: id_Producto
+            });
+        }
+        const product = productOpt.Some;
+        products.remove(product.id_Producto);
+        return Ok(product);
+    }),
+    updateProduct: update([
+        text,
+        text,
+        text,
+        text
+    ], Result(Product, AplicationError), (productId, nombre_Producto, fabricante_Producto, precio_Producto)=>{
+        const productOpt = products.get(Principal3.fromText(productId));
+        if ("None" in productOpt) {
+            return Err({
+                productDoesNotExist: productId
+            });
+        }
+        const newProduct = {
+            id_Producto: Principal3.fromText(productId),
+            nombre_Producto,
+            fabricante_Producto,
+            precio_Producto
+        };
+        products.remove(Principal3.fromText(productId));
+        products.insert(Principal3.fromText(productId), newProduct);
+        return Ok(newProduct);
     })
 });
 function generateId() {
